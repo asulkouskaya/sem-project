@@ -37,6 +37,14 @@ public class Window extends JFrame {
         inputArea.setBackground(Color.white);
         inputArea.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 
+        JRadioButton txtWrite = new JRadioButton(".txt");
+        add(txtWrite);
+        txtWrite.setSelected(true);
+        JRadioButton xmlWrite = new JRadioButton(".xml");
+        add(xmlWrite);
+        ButtonGroup writeGroup = new ButtonGroup();
+        writeGroup.add(txtWrite);
+        writeGroup.add(xmlWrite);
 
         outputArea = new JTextArea();
         add(outputArea);
@@ -44,5 +52,29 @@ public class Window extends JFrame {
         outputArea.setColumns(25);
         outputArea.setBackground(Color.white);
         outputArea.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+
+
+        read.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(".");
+            try {
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    if (fileChooser.getSelectedFile().getName().endsWith("txt")) {
+                        setStrategy(new TextHandlingStrategy());
+                    } else if (fileChooser.getSelectedFile().getName().endsWith("xml")) {
+                        setStrategy(new XMLHandlingStrategy());
+                    } else throw new IllegalArgumentException();
+                    strings = method.getStringArray(fileChooser.getSelectedFile());
+                }
+            } catch (IllegalArgumentException exception) {
+                JOptionPane.showMessageDialog(null, "Choose correct file.", "Illegal file format!", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException | ParserConfigurationException | SAXException exception) {
+                JOptionPane.showMessageDialog(null, exception.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+
+        });
+    }
+
+    private void setStrategy(HandlingStrategy handlingStrategy) {
+        method = handlingStrategy;
     }
 }
