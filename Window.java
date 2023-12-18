@@ -70,11 +70,19 @@ public class Window extends JFrame {
             } catch (IOException | ParserConfigurationException | SAXException exception) {
                 JOptionPane.showMessageDialog(null, exception.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
             }
-
+            showInput();
         });
     }
 
     private void setStrategy(HandlingStrategy handlingStrategy) {
         method = handlingStrategy;
+    }
+
+     private void showInput() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : strings) {
+            stringBuilder.append(string).append("\n");
+        }
+        inputArea.setText(stringBuilder.toString());
     }
 }
